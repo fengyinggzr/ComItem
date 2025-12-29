@@ -1,17 +1,19 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <QtQml/qqmlextensionplugin.h>
-
-Q_IMPORT_QML_PLUGIN(ComItemPlugin)
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+    
+    // 添加构建目录中的 QML 模块路径，以便可以找到 ComItem 插件
+    engine.addImportPath(QStringLiteral("qrc:/qt/qml"));
+    engine.addImportPath(app.applicationDirPath() + QStringLiteral("/../qml"));
+    
     // The first subfolder is the libraryName followed by the regular
     // folder structure: LibraryName/Subfolder
-    const QUrl url(QStringLiteral("qrc:/ExampleProjectApp/example/example.qml"));
+    const QUrl url(QStringLiteral("qrc:/qt/qml/ExampleProjectApp/example/example.qml"));
     QObject::connect(
         &engine,
         &QQmlApplicationEngine::objectCreated,

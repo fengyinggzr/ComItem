@@ -1,0 +1,33 @@
+MetaInfo {
+    Type {
+        name: "ComItem.ComItemControls"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComItemControls"
+            category: "ComItem - Controls"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "width"; type: "int"; value: 100 }
+            Property { name: "height"; type: "int"; value: 100 }
+        }
+    }
+
+    Type {
+        name: "ComItem.ComItem"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComItem"
+            category: "ComItem - Controls"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "width"; type: "int"; value: 100 }
+            Property { name: "height"; type: "int"; value: 100 }
+        }
+    }
+}

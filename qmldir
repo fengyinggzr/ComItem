@@ -1,2 +1,6 @@
 module ComItem
-plugin ComItem
+plugin ComItemplugin
+typeinfo plugins.qmltypes
+designersupported
+depends QtQuick
+ComItemControls 1.0 ComItemControls.qml
