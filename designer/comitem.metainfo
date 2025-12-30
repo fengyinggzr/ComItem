@@ -1,11 +1,11 @@
 MetaInfo {
     Type {
-        name: "ComItem.ComItemControls"
+        name: "ComItem.ComItem"
         icon: "images/item-icon16.svg"
 
         ItemLibraryEntry {
-            name: "ComItemControls"
-            category: "ComItem - Controls"
+            name: "ComItem"
+            category: "ComItem"
             libraryIcon: "images/item-icon.svg"
             version: "1.0"
             requiredImport: "ComItem"
@@ -16,12 +16,12 @@ MetaInfo {
     }
 
     Type {
-        name: "ComItem.ComItem"
+        name: "ComItem.ComItemControls"
         icon: "images/item-icon16.svg"
 
         ItemLibraryEntry {
-            name: "ComItem"
-            category: "ComItem - Controls"
+            name: "ComItemControls"
+            category: "ComItem"
             libraryIcon: "images/item-icon.svg"
             version: "1.0"
             requiredImport: "ComItem"

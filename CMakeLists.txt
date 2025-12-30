@@ -2,9 +2,6 @@ cmake_minimum_required(VERSION 3.16)
 
 project(ComItem VERSION 1.0 LANGUAGES CXX)
 
-# 设置 CMake 策略
-cmake_policy(SET CMP0177 NEW)
-
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -86,9 +83,9 @@ install(TARGETS ComItemplugin
     ARCHIVE DESTINATION "${INSTALL_QML_DIR}"
 )
 
-# 安装qmldir文件（使用生成的版本）
+# 安装qmldir文件（使用自定义版本，不含 prefer 指令）
 install(FILES
-    "${QT_QML_OUTPUT_DIRECTORY}/ComItem/qmldir"
+    "${CMAKE_CURRENT_SOURCE_DIR}/qmldir"
     DESTINATION "${INSTALL_QML_DIR}"
 )
 
@@ -116,22 +113,119 @@ install(DIRECTORY designer/images/
     DESTINATION "${INSTALL_QML_DIR}/designer/images"
 )
 
+# ==================== CMake 配置文件（供其他项目 find_package 使用）====================
+include(CMakePackageConfigHelpers)
 
+# 配置文件安装目录
+set(INSTALL_CMAKE_DIR "${QT_SDK_DIR}/lib/cmake/ComItem")
+set(PACKAGE_INSTALL_QML_DIR "${INSTALL_QML_DIR}")
 
-
-
-# ==================== Example Project ====================
-qt_add_executable(ExampleProject example/example.cpp)
-qt_add_qml_module(ExampleProject
-    URI ExampleProjectApp
-    VERSION 1.0
-    QML_FILES example/example.qml
+# 生成配置文件
+configure_package_config_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/ComItemConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/ComItemConfig.cmake"
+    INSTALL_DESTINATION "${INSTALL_CMAKE_DIR}"
+    PATH_VARS PACKAGE_INSTALL_QML_DIR
 )
-# 链接后端库（ComItem），插件会在运行时动态加载
-target_link_libraries(ExampleProject PRIVATE Qt6::Quick ComItem)
-target_compile_definitions(ExampleProject PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>)
 
-# 设置 Example 项目运行时 QML 导入路径
-set_target_properties(ExampleProject PROPERTIES
-    VS_DEBUGGER_ENVIRONMENT "QML_IMPORT_PATH=${QT_QML_OUTPUT_DIRECTORY}"
+# 生成版本文件
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/ComItemConfigVersion.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY AnyNewerVersion
+)
+
+# 安装 CMake 配置文件
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/ComItemConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/ComItemConfigVersion.cmake"
+    DESTINATION "${INSTALL_CMAKE_DIR}"
+)
+
+# ==================== 构建后自动复制到 Qt qml 目录 ====================
+# 这样在构建时会自动复制，无需手动执行 install
+
+# 设置输出目录，确保所有配置的输出都在同一位置
+set_target_properties(ComItem PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+)
+set_target_properties(ComItemplugin PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+)
+
+# 对于多配置生成器（如 Visual Studio），设置每个配置的输出目录
+foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
+    string(TOUPPER ${CONFIG_TYPE} CONFIG_TYPE_UPPER)
+    set_target_properties(ComItem PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} "${CMAKE_BINARY_DIR}/bin"
+        LIBRARY_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} "${CMAKE_BINARY_DIR}/bin"
+        ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} "${CMAKE_BINARY_DIR}/lib"
+    )
+    set_target_properties(ComItemplugin PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} "${CMAKE_BINARY_DIR}/bin"
+        LIBRARY_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} "${CMAKE_BINARY_DIR}/bin"
+        ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_TYPE_UPPER} "${CMAKE_BINARY_DIR}/lib"
+    )
+endforeach()
+
+add_custom_command(TARGET ComItem POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_QML_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_QML_DIR}/designer/images"
+    # 复制动态库
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "$<TARGET_FILE:ComItem>"
+        "${INSTALL_QML_DIR}/"
+    # 复制导入库
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "$<TARGET_LINKER_FILE:ComItem>"
+        "${INSTALL_QML_DIR}/"
+    COMMENT "Copying ComItem library to Qt qml directory..."
+)
+
+add_custom_command(TARGET ComItemplugin POST_BUILD
+    # 复制插件动态库
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "$<TARGET_FILE:ComItemplugin>"
+        "${INSTALL_QML_DIR}/"
+    # 复制插件的导入库 (.lib) - 使用固定路径因为生成器表达式可能不正确
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_BINARY_DIR}/lib/ComItemplugin.lib"
+        "${INSTALL_QML_DIR}/"
+    # 复制自定义 qmldir（不使用自动生成的，因为它包含 prefer 指令会影响设计器）
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/qmldir"
+        "${INSTALL_QML_DIR}/"
+    # 复制 qmltypes
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${QT_QML_OUTPUT_DIRECTORY}/ComItem/ComItem.qmltypes"
+        "${INSTALL_QML_DIR}/"
+    # 复制 QML 文件
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/ComItemControls.qml"
+        "${INSTALL_QML_DIR}/"
+    # 复制设计器 metainfo 文件
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/designer/comitem.metainfo"
+        "${INSTALL_QML_DIR}/designer/"
+    # 复制设计器图标
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/designer/images"
+        "${INSTALL_QML_DIR}/designer/images"
+    # 复制头文件（供其他项目使用）
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_SOURCE_DIR}/comitem.h"
+        "${INSTALL_QML_DIR}/"
+    # 复制 CMake 配置文件
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_CMAKE_DIR}"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_BINARY_DIR}/ComItemConfig.cmake"
+        "${INSTALL_CMAKE_DIR}/"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_BINARY_DIR}/ComItemConfigVersion.cmake"
+        "${INSTALL_CMAKE_DIR}/"
+    COMMENT "Copying ComItem plugin files to Qt qml directory..."
 )

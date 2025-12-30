@@ -1,0 +1,41 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(Qt6 COMPONENTS Quick Qml)
+
+# 设置 ComItem 的位置
+set(COMITEM_QML_DIR "@PACKAGE_INSTALL_QML_DIR@")
+
+# 创建导入的库目标
+if(NOT TARGET ComItem::ComItem)
+    add_library(ComItem::ComItem SHARED IMPORTED)
+    set_target_properties(ComItem::ComItem PROPERTIES
+        IMPORTED_LOCATION "${COMITEM_QML_DIR}/ComItem.dll"
+        IMPORTED_IMPLIB "${COMITEM_QML_DIR}/ComItem.lib"
+        INTERFACE_INCLUDE_DIRECTORIES "${COMITEM_QML_DIR}"
+    )
+endif()
+
+if(NOT TARGET ComItem::ComItemplugin)
+    add_library(ComItem::ComItemplugin SHARED IMPORTED)
+    set_target_properties(ComItem::ComItemplugin PROPERTIES
+        IMPORTED_LOCATION "${COMITEM_QML_DIR}/ComItemplugin.dll"
+        IMPORTED_IMPLIB "${COMITEM_QML_DIR}/ComItemplugin.lib"
+        INTERFACE_LINK_LIBRARIES "ComItem::ComItem"
+    )
+endif()
+
+# 为了让 qt6_import_qml_plugins 能找到插件，创建非命名空间的目标
+# 这样 Qt 的 qmlimportscanner 就不会报警告
+if(NOT TARGET ComItemplugin)
+    add_library(ComItemplugin INTERFACE IMPORTED)
+    set_target_properties(ComItemplugin PROPERTIES
+        INTERFACE_LINK_LIBRARIES "ComItem::ComItemplugin"
+    )
+endif()
+
+# 便捷变量
+set(ComItem_LIBRARIES ComItem::ComItem ComItem::ComItemplugin)
+set(ComItem_INCLUDE_DIRS "${COMITEM_QML_DIR}")
+
+check_required_components(ComItem)
