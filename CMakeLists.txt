@@ -47,6 +47,13 @@ set_target_properties(ComItem PROPERTIES
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE
+    # Debug 版本添加 d 后缀
+    DEBUG_POSTFIX "d"
+)
+
+# 设置插件的 Debug 后缀
+set_target_properties(ComItemplugin PROPERTIES
+    DEBUG_POSTFIX "d"
 )
 
 # 导出符号（Windows下需要）
@@ -175,25 +182,30 @@ endforeach()
 add_custom_command(TARGET ComItem POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_QML_DIR}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_QML_DIR}/designer/images"
-    # 复制动态库
+    # 复制动态库 (Debug: ComItemd.dll, Release: ComItem.dll)
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "$<TARGET_FILE:ComItem>"
         "${INSTALL_QML_DIR}/"
-    # 复制导入库
+    # 复制导入库 (Debug: ComItemd.lib, Release: ComItem.lib)
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "$<TARGET_LINKER_FILE:ComItem>"
         "${INSTALL_QML_DIR}/"
+    # 复制动态库到 Qt bin 目录（供设计器加载插件时找到依赖）
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "$<TARGET_FILE:ComItem>"
+        "${QT_SDK_DIR}/bin/"
     COMMENT "Copying ComItem library to Qt qml directory..."
 )
 
 add_custom_command(TARGET ComItemplugin POST_BUILD
-    # 复制插件动态库
+    # 复制插件动态库 (Debug: ComItemplugind.dll, Release: ComItemplugin.dll)
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "$<TARGET_FILE:ComItemplugin>"
         "${INSTALL_QML_DIR}/"
-    # 复制插件的导入库 (.lib) - 使用固定路径因为生成器表达式可能不正确
+    # 复制插件的导入库 (.lib)
+    # Debug: ComItemplugind.lib, Release: ComItemplugin.lib
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_BINARY_DIR}/lib/ComItemplugin.lib"
+        "${CMAKE_BINARY_DIR}/lib/$<IF:$<CONFIG:Debug>,ComItemplugind.lib,ComItemplugin.lib>"
         "${INSTALL_QML_DIR}/"
     # 复制自定义 qmldir（不使用自动生成的，因为它包含 prefer 指令会影响设计器）
     COMMAND ${CMAKE_COMMAND} -E copy_if_different

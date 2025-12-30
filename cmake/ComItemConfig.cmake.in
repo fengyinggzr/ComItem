@@ -6,12 +6,17 @@ find_dependency(Qt6 COMPONENTS Quick Qml)
 # 设置 ComItem 的位置
 set(COMITEM_QML_DIR "@PACKAGE_INSTALL_QML_DIR@")
 
-# 创建导入的库目标
+# 创建导入的库目标 - 支持 Debug 和 Release 配置
 if(NOT TARGET ComItem::ComItem)
     add_library(ComItem::ComItem SHARED IMPORTED)
     set_target_properties(ComItem::ComItem PROPERTIES
-        IMPORTED_LOCATION "${COMITEM_QML_DIR}/ComItem.dll"
-        IMPORTED_IMPLIB "${COMITEM_QML_DIR}/ComItem.lib"
+        IMPORTED_CONFIGURATIONS "Debug;Release"
+        # Release 配置
+        IMPORTED_LOCATION_RELEASE "${COMITEM_QML_DIR}/ComItem.dll"
+        IMPORTED_IMPLIB_RELEASE "${COMITEM_QML_DIR}/ComItem.lib"
+        # Debug 配置
+        IMPORTED_LOCATION_DEBUG "${COMITEM_QML_DIR}/ComItemd.dll"
+        IMPORTED_IMPLIB_DEBUG "${COMITEM_QML_DIR}/ComItemd.lib"
         INTERFACE_INCLUDE_DIRECTORIES "${COMITEM_QML_DIR}"
     )
 endif()
@@ -19,8 +24,13 @@ endif()
 if(NOT TARGET ComItem::ComItemplugin)
     add_library(ComItem::ComItemplugin SHARED IMPORTED)
     set_target_properties(ComItem::ComItemplugin PROPERTIES
-        IMPORTED_LOCATION "${COMITEM_QML_DIR}/ComItemplugin.dll"
-        IMPORTED_IMPLIB "${COMITEM_QML_DIR}/ComItemplugin.lib"
+        IMPORTED_CONFIGURATIONS "Debug;Release"
+        # Release 配置
+        IMPORTED_LOCATION_RELEASE "${COMITEM_QML_DIR}/ComItemplugin.dll"
+        IMPORTED_IMPLIB_RELEASE "${COMITEM_QML_DIR}/ComItemplugin.lib"
+        # Debug 配置
+        IMPORTED_LOCATION_DEBUG "${COMITEM_QML_DIR}/ComItemplugind.dll"
+        IMPORTED_IMPLIB_DEBUG "${COMITEM_QML_DIR}/ComItemplugind.lib"
         INTERFACE_LINK_LIBRARIES "ComItem::ComItem"
     )
 endif()
