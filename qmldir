@@ -5,3 +5,7 @@ typeinfo ComItem.qmltypes
 designersupported
 depends QtQuick
 ComItemControls 1.0 ComItemControls.qml
+ComCard 1.0 ComCard.qml
+ComSwitch 1.0 ComSwitch.qml
+ComBadge 1.0 ComBadge.qml
+ComAvatar 1.0 ComAvatar.qml

@@ -5,7 +5,7 @@ MetaInfo {
 
         ItemLibraryEntry {
             name: "ComItem"
-            category: "ComItem"
+            category: "ComItem - Basic"
             libraryIcon: "images/item-icon.svg"
             version: "1.0"
             requiredImport: "ComItem"
@@ -21,13 +21,112 @@ MetaInfo {
 
         ItemLibraryEntry {
             name: "ComItemControls"
-            category: "ComItem"
+            category: "ComItem - Basic"
             libraryIcon: "images/item-icon.svg"
             version: "1.0"
             requiredImport: "ComItem"
 
             Property { name: "width"; type: "int"; value: 100 }
             Property { name: "height"; type: "int"; value: 100 }
+        }
+    }
+
+    Type {
+        name: "ComItem.ComButton"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComButton"
+            category: "ComItem - Controls"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "width"; type: "int"; value: 120 }
+            Property { name: "height"; type: "int"; value: 40 }
+            Property { name: "text"; type: "string"; value: "Button" }
+        }
+    }
+
+    Type {
+        name: "ComItem.ComProgressBar"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComProgressBar"
+            category: "ComItem - Controls"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "width"; type: "int"; value: 200 }
+            Property { name: "height"; type: "int"; value: 24 }
+            Property { name: "value"; type: "real"; value: 50 }
+        }
+    }
+
+    Type {
+        name: "ComItem.ComCard"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComCard"
+            category: "ComItem - Containers"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "width"; type: "int"; value: 300 }
+            Property { name: "height"; type: "int"; value: 200 }
+            Property { name: "title"; type: "string"; value: "Card Title" }
+        }
+    }
+
+    Type {
+        name: "ComItem.ComSwitch"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComSwitch"
+            category: "ComItem - Controls"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "width"; type: "int"; value: 50 }
+            Property { name: "height"; type: "int"; value: 26 }
+        }
+    }
+
+    Type {
+        name: "ComItem.ComBadge"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComBadge"
+            category: "ComItem - Display"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "text"; type: "string"; value: "99" }
+        }
+    }
+
+    Type {
+        name: "ComItem.ComAvatar"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComAvatar"
+            category: "ComItem - Display"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "width"; type: "int"; value: 48 }
+            Property { name: "height"; type: "int"; value: 48 }
+            Property { name: "text"; type: "string"; value: "A" }
         }
     }
 }
