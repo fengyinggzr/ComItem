@@ -13,6 +13,10 @@ ComButton::ComButton(QQuickItem *parent)
 {
     setAcceptedMouseButtons(Qt::LeftButton);
     setAcceptHoverEvents(true);
+    
+    // 设置默认尺寸
+    setImplicitWidth(100);
+    setImplicitHeight(36);
 }
 
 ComButton::~ComButton() {}

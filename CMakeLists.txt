@@ -252,3 +252,11 @@ add_custom_command(TARGET ComItemplugin POST_BUILD
         "${INSTALL_CMAKE_DIR}/"
     COMMENT "Copying ComItem plugin files to Qt qml directory..."
 )
+
+# ==================== 示例项目 ====================
+# 可通过 -DBUILD_EXAMPLE=OFF 禁用示例项目构建
+option(BUILD_EXAMPLE "Build the example application" ON)
+
+if(BUILD_EXAMPLE)
+    add_subdirectory(example)
+endif()

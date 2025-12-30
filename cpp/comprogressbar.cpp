@@ -11,6 +11,9 @@ ComProgressBar::ComProgressBar(QQuickItem *parent)
     , m_radius(5)
     , m_showText(true)
 {
+    // 设置默认尺寸
+    setImplicitWidth(200);
+    setImplicitHeight(24);
 }
 
 ComProgressBar::~ComProgressBar() {}
