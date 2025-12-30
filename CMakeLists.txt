@@ -21,6 +21,18 @@ cmake_path(SET QT_SDK_DIR NORMALIZE ${QT_SDK_DIR})
 message("CMAKE_INSTALL_PREFIX: ${CMAKE_INSTALL_PREFIX}")
 message("QT_SDK_DIR: ${QT_SDK_DIR}")
 
+# ==================== 自动扫描文件 ====================
+# 扫描 cpp 目录下的所有 .cpp 和 .h 文件
+file(GLOB CPP_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "cpp/*.cpp")
+file(GLOB CPP_HEADERS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "cpp/*.h")
+
+# 扫描 qml 目录下的所有 .qml 文件
+file(GLOB QML_FILES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "qml/*.qml")
+
+# 输出扫描到的文件（调试用）
+message("Found C++ sources: ${CPP_SOURCES}")
+message("Found C++ headers: ${CPP_HEADERS}")
+message("Found QML files: ${QML_FILES}")
 
 # 创建共享库而非静态库，以便其他程序可以动态加载
 qt_add_library(ComItem SHARED)
@@ -29,23 +41,11 @@ qt_add_library(ComItem SHARED)
 qt_add_qml_module(ComItem
     URI ComItem
     VERSION 1.0
-    QML_FILES 
-        qml/ComItemControls.qml
-        qml/ComCard.qml
-        qml/ComSwitch.qml
-        qml/ComBadge.qml
-        qml/ComAvatar.qml
-    SOURCES 
-        cpp/comitem.cpp 
-        cpp/comitem.h
-        cpp/combutton.cpp
-        cpp/combutton.h
-        cpp/comprogressbar.cpp
-        cpp/comprogressbar.h
+    QML_FILES ${QML_FILES}
+    SOURCES ${CPP_SOURCES} ${CPP_HEADERS}
     DESIGNER_SUPPORTED
     PLUGIN_TARGET ComItemplugin
     OUTPUT_DIRECTORY "${QT_QML_OUTPUT_DIRECTORY}/ComItem"
-    # RESOURCE_PREFIX "/qt/qml"
 )
 
 # 设置目标属性
@@ -109,20 +109,15 @@ install(FILES
     DESTINATION "${INSTALL_QML_DIR}"
 )
 
-# 安装QML类型信息文件（保留原文件名）
+# 安装QML类型信息文件
 install(FILES
     "${QT_QML_OUTPUT_DIRECTORY}/ComItem/ComItem.qmltypes"
     DESTINATION "${INSTALL_QML_DIR}"
     OPTIONAL
 )
 
-# 安装QML文件
-install(FILES
-    qml/ComItemControls.qml
-    qml/ComCard.qml
-    qml/ComSwitch.qml
-    qml/ComBadge.qml
-    qml/ComAvatar.qml
+# 安装QML文件（使用扫描到的文件列表）
+install(FILES ${QML_FILES}
     DESTINATION "${INSTALL_QML_DIR}"
 )
 
@@ -167,8 +162,6 @@ install(FILES
 )
 
 # ==================== 构建后自动复制到 Qt qml 目录 ====================
-# 这样在构建时会自动复制，无需手动执行 install
-
 # 设置输出目录，确保所有配置的输出都在同一位置
 set_target_properties(ComItem PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
@@ -196,6 +189,7 @@ foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
     )
 endforeach()
 
+# ComItem 库构建后复制
 add_custom_command(TARGET ComItem POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_QML_DIR}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_QML_DIR}/designer/images"
@@ -214,17 +208,17 @@ add_custom_command(TARGET ComItem POST_BUILD
     COMMENT "Copying ComItem library to Qt qml directory..."
 )
 
+# ComItemplugin 构建后复制
 add_custom_command(TARGET ComItemplugin POST_BUILD
-    # 复制插件动态库 (Debug: ComItemplugind.dll, Release: ComItemplugin.dll)
+    # 复制插件动态库
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "$<TARGET_FILE:ComItemplugin>"
         "${INSTALL_QML_DIR}/"
     # 复制插件的导入库 (.lib)
-    # Debug: ComItemplugind.lib, Release: ComItemplugin.lib
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_BINARY_DIR}/lib/$<IF:$<CONFIG:Debug>,ComItemplugind.lib,ComItemplugin.lib>"
         "${INSTALL_QML_DIR}/"
-    # 复制自定义 qmldir（不使用自动生成的，因为它包含 prefer 指令会影响设计器）
+    # 复制自定义 qmldir
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_CURRENT_SOURCE_DIR}/qmldir"
         "${INSTALL_QML_DIR}/"
@@ -232,40 +226,17 @@ add_custom_command(TARGET ComItemplugin POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${QT_QML_OUTPUT_DIRECTORY}/ComItem/ComItem.qmltypes"
         "${INSTALL_QML_DIR}/"
-    # 复制 QML 文件
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/qml/ComItemControls.qml"
-        "${INSTALL_QML_DIR}/"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/qml/ComCard.qml"
-        "${INSTALL_QML_DIR}/"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/qml/ComSwitch.qml"
-        "${INSTALL_QML_DIR}/"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/qml/ComBadge.qml"
-        "${INSTALL_QML_DIR}/"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/qml/ComAvatar.qml"
-        "${INSTALL_QML_DIR}/"
-    # 复制设计器 metainfo 文件
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/designer/comitem.metainfo"
-        "${INSTALL_QML_DIR}/designer/"
-    # 复制设计器图标
+    # 复制 qml 目录下所有 QML 文件
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${CMAKE_CURRENT_SOURCE_DIR}/designer/images"
-        "${INSTALL_QML_DIR}/designer/images"
-    # 复制头文件（供其他项目使用）
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/cpp/comitem.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/qml"
         "${INSTALL_QML_DIR}/"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/cpp/combutton.h"
-        "${INSTALL_QML_DIR}/"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/cpp/comprogressbar.h"
-        "${INSTALL_QML_DIR}/"
+    # 复制设计器目录
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_SOURCE_DIR}/designer"
+        "${INSTALL_QML_DIR}/designer"
+    # 复制 cpp 目录下所有头文件（使用循环复制 .h 文件）
+    COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/copy_headers.cmake"
+        "${CMAKE_CURRENT_SOURCE_DIR}/cpp" "${INSTALL_QML_DIR}"
     # 复制 CMake 配置文件
     COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_CMAKE_DIR}"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
