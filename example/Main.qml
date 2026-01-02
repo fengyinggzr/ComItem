@@ -103,6 +103,10 @@ Window {
                 RowLayout {
                     spacing: 20
 
+                    ComButton {
+
+                    }
+
                     ComProgressBar {
 
                         value: 50
