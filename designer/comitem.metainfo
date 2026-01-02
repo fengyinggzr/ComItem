@@ -32,23 +32,6 @@ MetaInfo {
     }
 
     Type {
-        name: "ComItem.ComButton"
-        icon: "images/item-icon16.svg"
-
-        ItemLibraryEntry {
-            name: "ComButton"
-            category: "ComItem - Controls"
-            libraryIcon: "images/item-icon.svg"
-            version: "1.0"
-            requiredImport: "ComItem"
-
-            Property { name: "width"; type: "int"; value: 120 }
-            Property { name: "height"; type: "int"; value: 40 }
-            Property { name: "text"; type: "string"; value: "Button" }
-        }
-    }
-
-    Type {
         name: "ComItem.ComProgressBar"
         icon: "images/item-icon16.svg"
 
@@ -127,6 +110,19 @@ MetaInfo {
             Property { name: "width"; type: "int"; value: 48 }
             Property { name: "height"; type: "int"; value: 48 }
             Property { name: "text"; type: "string"; value: "A" }
+        }
+    }
+
+    Type {
+        name: "ComItem.BasicButton"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "BasicButton"
+            category: "ComItem - Controls"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
         }
     }
 }

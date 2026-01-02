@@ -3,8 +3,7 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import ComItem
 
-ApplicationWindow {
-    id: root
+Window {
     width: 800
     height: 600
     visible: true
@@ -104,22 +103,11 @@ ApplicationWindow {
                 RowLayout {
                     spacing: 20
 
-                    ComBadge {
-                    }
-
-                    ComBadge {
-                    }
-
-                    ComButton {
-
-                    }
-
                     ComProgressBar {
 
-                        value: 70
+                        value: 50
                     }
 
-                    
                 }
             }
 
