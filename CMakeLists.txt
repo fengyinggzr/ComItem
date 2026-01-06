@@ -204,42 +204,53 @@ foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
     )
 endforeach()
 
-# ComItem 库构建后复制
-add_custom_command(TARGET ComItem POST_BUILD
+# ==================== 构建后自动复制到 Qt qml 目录 ====================
+# 使用 add_custom_target 确保每次构建都执行复制操作（包括增量编译）
+add_custom_target(CopyComItemFiles ALL
+    DEPENDS ComItem ComItemplugin
     COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_QML_DIR}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_QML_DIR}/designer/images"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_QDS_QML_DIR}"
     COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_QDS_QML_DIR}/designer/images"
-    # 复制动态库 (Debug: ComItemd.dll, Release: ComItem.dll)
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_CMAKE_DIR}"
+
+    # 复制 CMake 配置文件
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_BINARY_DIR}/ComItemConfig.cmake"
+        "${INSTALL_CMAKE_DIR}/"
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CMAKE_CURRENT_BINARY_DIR}/ComItemConfigVersion.cmake"
+        "${INSTALL_CMAKE_DIR}/"
+    
+    # 复制 ComItem 动态库 (Debug: ComItemd.dll, Release: ComItem.dll)
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "$<TARGET_FILE:ComItem>"
         "${INSTALL_QML_DIR}/"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "$<TARGET_FILE:ComItem>"
         "${INSTALL_QDS_QML_DIR}/"
-    # 复制导入库 (Debug: ComItemd.lib, Release: ComItem.lib)
+    
+    # 复制 ComItem 导入库 (Debug: ComItemd.lib, Release: ComItem.lib)
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "$<TARGET_LINKER_FILE:ComItem>"
         "${INSTALL_QML_DIR}/"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "$<TARGET_LINKER_FILE:ComItem>"
         "${INSTALL_QDS_QML_DIR}/"
+    
     # 复制动态库到 Qt bin 目录（供设计器加载插件时找到依赖）
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "$<TARGET_FILE:ComItem>"
         "${QT_SDK_DIR}/bin/"
-    COMMENT "Copying ComItem library to Qt qml directory..."
-)
-
-# ComItemplugin 构建后复制
-add_custom_command(TARGET ComItemplugin POST_BUILD
-    # 复制插件动态库
+    
+    # 复制 ComItemplugin 插件动态库
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "$<TARGET_FILE:ComItemplugin>"
         "${INSTALL_QML_DIR}/"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "$<TARGET_FILE:ComItemplugin>"
         "${INSTALL_QDS_QML_DIR}/"
+    
     # 复制插件的导入库 (.lib)
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_BINARY_DIR}/lib/$<IF:$<CONFIG:Debug>,ComItemplugind.lib,ComItemplugin.lib>"
@@ -247,6 +258,7 @@ add_custom_command(TARGET ComItemplugin POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_BINARY_DIR}/lib/$<IF:$<CONFIG:Debug>,ComItemplugind.lib,ComItemplugin.lib>"
         "${INSTALL_QDS_QML_DIR}/"
+    
     # 复制自定义 qmldir
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_CURRENT_SOURCE_DIR}/qmldir"
@@ -254,6 +266,7 @@ add_custom_command(TARGET ComItemplugin POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_CURRENT_SOURCE_DIR}/qmldir"
         "${INSTALL_QDS_QML_DIR}/"
+    
     # 复制 qmltypes
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${QT_QML_OUTPUT_DIRECTORY}/ComItem/ComItem.qmltypes"
@@ -261,6 +274,7 @@ add_custom_command(TARGET ComItemplugin POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
         "${QT_QML_OUTPUT_DIRECTORY}/ComItem/ComItem.qmltypes"
         "${INSTALL_QDS_QML_DIR}/"
+    
     # 复制 qml 目录下所有 QML 文件
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${CMAKE_CURRENT_SOURCE_DIR}/qml"
@@ -268,6 +282,7 @@ add_custom_command(TARGET ComItemplugin POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${CMAKE_CURRENT_SOURCE_DIR}/qml"
         "${INSTALL_QDS_QML_DIR}/"
+    
     # 复制设计器目录
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${CMAKE_CURRENT_SOURCE_DIR}/designer"
@@ -275,20 +290,17 @@ add_custom_command(TARGET ComItemplugin POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
         "${CMAKE_CURRENT_SOURCE_DIR}/designer"
         "${INSTALL_QDS_QML_DIR}/designer"
-    # 复制 cpp 目录下所有头文件（使用循环复制 .h 文件）
+    
+    # 复制 cpp 目录下所有头文件
     COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/copy_headers.cmake"
         "${CMAKE_CURRENT_SOURCE_DIR}/cpp" "${INSTALL_QML_DIR}"
     COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_SOURCE_DIR}/cmake/copy_headers.cmake"
         "${CMAKE_CURRENT_SOURCE_DIR}/cpp" "${INSTALL_QDS_QML_DIR}"
-    # 复制 CMake 配置文件
-    COMMAND ${CMAKE_COMMAND} -E make_directory "${INSTALL_CMAKE_DIR}"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_BINARY_DIR}/ComItemConfig.cmake"
-        "${INSTALL_CMAKE_DIR}/"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_BINARY_DIR}/ComItemConfigVersion.cmake"
-        "${INSTALL_CMAKE_DIR}/"
-    COMMENT "Copying ComItem plugin files to Qt qml directory and Qt Design Studio..."
+    
+
+    
+    COMMENT "Copying ComItem files to Qt directories (runs on every build)..."
+    VERBATIM
 )
 
 # ==================== 示例项目 ====================
