@@ -8,6 +8,10 @@ ComboBox {
 
     // Popup 背景透明度控制，false 为非透明（默认），true 为透明
     property bool popupTransparent: false
+    // Popup 显示的行数，默认3行，超出部分可滚动
+    property int visibleItemCount: 3
+    // 每行高度
+    readonly property int itemHeight: 36
 
     implicitWidth: 200
     implicitHeight: 36
@@ -15,8 +19,8 @@ ComboBox {
     font.pixelSize: ComTheme.fontSizeMedium
 
     delegate: ItemDelegate {
-        width: root.width
-        height: 36
+        width: root.width - 8  // 减去 padding
+        height: root.itemHeight
 
         contentItem: Text {
             text: root.textRole ? (Array.isArray(root.model)
@@ -91,15 +95,21 @@ ComboBox {
     popup: Popup {
         y: root.height + 4
         width: root.width
-        implicitHeight: contentItem.implicitHeight + 8
+        // 根据 model 数量和 visibleItemCount 计算高度
+        implicitHeight: Math.min(root.count, root.visibleItemCount) * root.itemHeight + 8
         padding: 4
 
         contentItem: ListView {
+            id: listView
             clip: true
             implicitHeight: contentHeight
             model: root.popup.visible ? root.delegateModel : null
             currentIndex: root.highlightedIndex
-            ScrollIndicator.vertical: ScrollIndicator {}
+            boundsBehavior: Flickable.StopAtBounds
+            // 启用滚动条
+            ScrollBar.vertical: ScrollBar {
+                policy: root.count > root.visibleItemCount ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
+            }
         }
 
         background: Rectangle {

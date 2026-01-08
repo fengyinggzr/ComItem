@@ -149,19 +149,19 @@ Window {
                 ColumnLayout {
                     spacing: 4
                     ComComboBox {
-                        model: ["选项 1", "选项 2", "选项 3", "选项 4"]
+                        model: ["选项 1", "选项 2", "选项 3", "选项 4", "选项 5", "选项 6"]
                     }
-                    ComLabel { text: "默认样式"; secondary: true; size: "small" }
+                    ComLabel { text: "默认3行"; secondary: true; size: "small" }
                 }
 
                 ColumnLayout {
                     spacing: 4
                     ComComboBox {
-                        model: ["北京", "上海", "广州", "深圳"]
+                        model: ["北京", "上海", "广州", "深圳", "杭州", "南京", "武汉"]
                         currentIndex: 1
-                        popupTransparent: true
+                        visibleItemCount: 5
                     }
-                    ComLabel { text: "透明弹窗"; secondary: true; size: "small" }
+                    ComLabel { text: "显示5行"; secondary: true; size: "small" }
                 }
 
                 ColumnLayout {
@@ -255,74 +255,6 @@ Window {
                     width: 140
                     height: 80
                     shape: "chart"
-                }
-            }
-
-            // ===== 卡片示例 =====
-            ComLabel { text: "ComCard 卡片容器"; bold: true }
-
-            RowLayout {
-                spacing: 16
-
-                ComCard {
-                    width: 280
-                    height: 180
-                    title: "用户信息"
-                    borderColor: ComTheme.border
-
-                    contentItem: ColumnLayout {
-                        spacing: 12
-                        anchors.fill: parent
-
-                        RowLayout {
-                            spacing: 12
-                            ComAvatar {
-                                width: 48
-                                height: 48
-                                text: "张"
-                                backgroundColor: ComTheme.primary
-                            }
-                            ColumnLayout {
-                                spacing: 4
-                                ComLabel { text: "张三"; bold: true }
-                                ComLabel { text: "软件工程师"; secondary: true; size: "small" }
-                            }
-                        }
-
-                        ComTextField {
-                            Layout.fillWidth: true
-                            placeholderText: "添加备注..."
-                        }
-                    }
-                }
-
-                ComCard {
-                    width: 280
-                    height: 180
-                    title: "设置选项"
-                    borderColor: ComTheme.border
-
-                    contentItem: ColumnLayout {
-                        spacing: 12
-                        anchors.fill: parent
-
-                        RowLayout {
-                            Layout.fillWidth: true
-                            ComLabel { text: "深色模式"; Layout.fillWidth: true }
-                            ComSwitch {}
-                        }
-
-                        RowLayout {
-                            Layout.fillWidth: true
-                            ComLabel { text: "消息通知"; Layout.fillWidth: true }
-                            ComSwitch { checked: true }
-                        }
-
-                        ComCheckBox {
-                            text: "记住我的选择"
-                            checked: true
-                        }
-                    }
                 }
             }
 

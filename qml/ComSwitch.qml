@@ -1,62 +1,56 @@
 import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Basic
 
 // ComSwitch - 开关组件
-Item {
+Switch {
     id: root
 
-    property bool checked: false
-    property color checkedColor: ComTheme.primary
-    property color uncheckedColor: ComTheme.border
-    property color handleColor: ComTheme.background
-    property bool enabled: true
+    implicitWidth: 50
+    implicitHeight: 26
 
-    signal toggled(bool checked)
-
-    width: 50
-    height: 26
-    opacity: enabled ? 1.0 : 0.5
-
-    Rectangle {
+    indicator: Rectangle {
         id: background
-        anchors.fill: parent
+        width: root.implicitWidth
+        height: root.implicitHeight
         radius: height / 2
-        color: root.checked ? root.checkedColor : root.uncheckedColor
+        color: root.checked ? ComTheme.primary : ComTheme.border
+        opacity: root.enabled ? 1.0 : 0.5
 
         Behavior on color {
-            ColorAnimation { duration: 150 }
-        }
-    }
-
-    Rectangle {
-        id: handle
-        width: parent.height - 4
-        height: width
-        radius: width / 2
-        color: root.handleColor
-        anchors.verticalCenter: parent.verticalCenter
-        x: root.checked ? parent.width - width - 2 : 2
-
-        Behavior on x {
-            NumberAnimation { duration: 150; easing.type: Easing.OutQuad }
+            ColorAnimation { duration: ComTheme.animationDuration }
         }
 
-        // 阴影
         Rectangle {
-            anchors.fill: parent
-            anchors.margins: -1
-            radius: parent.radius + 1
-            color: "#20000000"
-            z: -1
+            id: handle
+            width: parent.height - 4
+            height: width
+            radius: width / 2
+            color: ComTheme.background
+            anchors.verticalCenter: parent.verticalCenter
+            x: root.checked ? parent.width - width - 2 : 2
+
+            Behavior on x {
+                NumberAnimation { duration: ComTheme.animationDuration; easing.type: Easing.OutQuad }
+            }
+
+            // 阴影
+            Rectangle {
+                anchors.fill: parent
+                anchors.margins: -1
+                radius: parent.radius + 1
+                color: "#20000000"
+                z: -1
+            }
         }
     }
 
-    MouseArea {
-        anchors.fill: parent
-        enabled: root.enabled
-        cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
-        onClicked: {
-            root.checked = !root.checked
-            root.toggled(root.checked)
-        }
+    contentItem: Text {
+        text: root.text
+        font.pixelSize: ComTheme.fontSizeMedium
+        color: root.enabled ? ComTheme.textPrimary : ComTheme.textDisabled
+        verticalAlignment: Text.AlignVCenter
+        leftPadding: root.indicator.width + ComTheme.spacingMedium
+        visible: root.text !== ""
     }
 }

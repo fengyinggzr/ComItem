@@ -6,13 +6,9 @@ designersupported
 depends QtQuick
 singleton ComTheme 1.0 ComTheme.qml
 ComButton 1.0 ComButton.qml
-ComAvatar 1.0 ComAvatar.qml
-ComBadge 1.0 ComBadge.qml
 ComCanvas 1.0 ComCanvas.qml
-ComCard 1.0 ComCard.qml
 ComCheckBox 1.0 ComCheckBox.qml
 ComComboBox 1.0 ComComboBox.qml
-ComItemControls 1.0 ComItemControls.qml
 ComLabel 1.0 ComLabel.qml
 ComSwitch 1.0 ComSwitch.qml
 ComTextField 1.0 ComTextField.qml

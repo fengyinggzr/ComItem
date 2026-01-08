@@ -18,7 +18,7 @@ Button {
         id: contentText
         text: root.text
         font: root.font
-        color: ComTheme.textOnPrimary
+        color: root.enabled ? ComTheme.textOnPrimary : ComTheme.textDisabled
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
@@ -34,6 +34,8 @@ Button {
             if (root.hovered) return ComTheme.primaryHover
             return ComTheme.primary
         }
+        border.width: root.enabled ? 0 : 1
+        border.color: ComTheme.border
 
         Behavior on color {
             ColorAnimation { duration: ComTheme.animationDuration }
