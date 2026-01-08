@@ -16,11 +16,11 @@ MetaInfo {
     }
 
     Type {
-        name: "ComItem.ComButton"
+        name: "ComItem.ComBasicButton"
         icon: "images/item-icon16.svg"
 
         ItemLibraryEntry {
-            name: "ComButton"
+            name: "ComBasicButton"
             category: "ComItem - Controls"
             libraryIcon: "images/item-icon.svg"
             version: "1.0"
@@ -131,11 +131,11 @@ MetaInfo {
     }
 
     Type {
-        name: "ComItem.BasicButton"
+        name: "ComItem.ComButton"
         icon: "images/item-icon16.svg"
 
         ItemLibraryEntry {
-            name: "BasicButton"
+            name: "ComButton"
             category: "ComItem - Controls"
             libraryIcon: "images/item-icon.svg"
             version: "1.0"

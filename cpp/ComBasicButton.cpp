@@ -1,8 +1,8 @@
-#include "combutton.h"
+#include "ComBasicButton.h"
 #include <QPainter>
 #include <QMouseEvent>
 
-ComButton::ComButton(QQuickItem *parent)
+ComBasicButton::ComBasicButton(QQuickItem *parent)
     : QQuickPaintedItem(parent)
     , m_text("Button")
     , m_backgroundColor("#3498db")
@@ -19,9 +19,9 @@ ComButton::ComButton(QQuickItem *parent)
     setImplicitHeight(36);
 }
 
-ComButton::~ComButton() {}
+ComBasicButton::~ComBasicButton() {}
 
-void ComButton::paint(QPainter *painter)
+void ComBasicButton::paint(QPainter *painter)
 {
     painter->setRenderHint(QPainter::Antialiasing);
 
@@ -46,9 +46,9 @@ void ComButton::paint(QPainter *painter)
     painter->drawText(boundingRect(), Qt::AlignCenter, m_text);
 }
 
-QString ComButton::text() const { return m_text; }
+QString ComBasicButton::text() const { return m_text; }
 
-void ComButton::setText(const QString &text)
+void ComBasicButton::setText(const QString &text)
 {
     if (m_text != text) {
         m_text = text;
@@ -57,9 +57,9 @@ void ComButton::setText(const QString &text)
     }
 }
 
-QColor ComButton::backgroundColor() const { return m_backgroundColor; }
+QColor ComBasicButton::backgroundColor() const { return m_backgroundColor; }
 
-void ComButton::setBackgroundColor(const QColor &color)
+void ComBasicButton::setBackgroundColor(const QColor &color)
 {
     if (m_backgroundColor != color) {
         m_backgroundColor = color;
@@ -68,9 +68,9 @@ void ComButton::setBackgroundColor(const QColor &color)
     }
 }
 
-QColor ComButton::textColor() const { return m_textColor; }
+QColor ComBasicButton::textColor() const { return m_textColor; }
 
-void ComButton::setTextColor(const QColor &color)
+void ComBasicButton::setTextColor(const QColor &color)
 {
     if (m_textColor != color) {
         m_textColor = color;
@@ -79,9 +79,9 @@ void ComButton::setTextColor(const QColor &color)
     }
 }
 
-int ComButton::radius() const { return m_radius; }
+int ComBasicButton::radius() const { return m_radius; }
 
-void ComButton::setRadius(int radius)
+void ComBasicButton::setRadius(int radius)
 {
     if (m_radius != radius) {
         m_radius = radius;
@@ -90,10 +90,10 @@ void ComButton::setRadius(int radius)
     }
 }
 
-bool ComButton::pressed() const { return m_pressed; }
-bool ComButton::hovered() const { return m_hovered; }
+bool ComBasicButton::pressed() const { return m_pressed; }
+bool ComBasicButton::hovered() const { return m_hovered; }
 
-void ComButton::mousePressEvent(QMouseEvent *event)
+void ComBasicButton::mousePressEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         m_pressed = true;
@@ -102,7 +102,7 @@ void ComButton::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void ComButton::mouseReleaseEvent(QMouseEvent *event)
+void ComBasicButton::mouseReleaseEvent(QMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton) {
         m_pressed = false;
@@ -114,7 +114,7 @@ void ComButton::mouseReleaseEvent(QMouseEvent *event)
     }
 }
 
-void ComButton::hoverEnterEvent(QHoverEvent *event)
+void ComBasicButton::hoverEnterEvent(QHoverEvent *event)
 {
     Q_UNUSED(event)
     m_hovered = true;
@@ -122,7 +122,7 @@ void ComButton::hoverEnterEvent(QHoverEvent *event)
     update();
 }
 
-void ComButton::hoverLeaveEvent(QHoverEvent *event)
+void ComBasicButton::hoverLeaveEvent(QHoverEvent *event)
 {
     Q_UNUSED(event)
     m_hovered = false;

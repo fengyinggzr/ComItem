@@ -38,21 +38,21 @@ Window {
             }
 
             // ===== 按钮组 =====
-            ComLabel { text: "BasicButton 按钮"; bold: true }
+            ComLabel { text: "ComButton 按钮"; bold: true }
 
             RowLayout {
                 spacing: 12
 
-                BasicButton {
+                ComButton {
                     text: "默认按钮"
                 }
 
-                BasicButton {
+                ComButton {
                     text: "圆角按钮"
                     radius: 18
                 }
 
-                BasicButton {
+                ComButton {
                     text: "禁用状态"
                     enabled: false
                 }
@@ -146,18 +146,31 @@ Window {
             RowLayout {
                 spacing: 12
 
-                ComComboBox {
-                    model: ["选项 1", "选项 2", "选项 3", "选项 4"]
+                ColumnLayout {
+                    spacing: 4
+                    ComComboBox {
+                        model: ["选项 1", "选项 2", "选项 3", "选项 4"]
+                    }
+                    ComLabel { text: "默认样式"; secondary: true; size: "small" }
                 }
 
-                ComComboBox {
-                    model: ["北京", "上海", "广州", "深圳"]
-                    currentIndex: 1
+                ColumnLayout {
+                    spacing: 4
+                    ComComboBox {
+                        model: ["北京", "上海", "广州", "深圳"]
+                        currentIndex: 1
+                        popupTransparent: true
+                    }
+                    ComLabel { text: "透明弹窗"; secondary: true; size: "small" }
                 }
 
-                ComComboBox {
-                    model: ["禁用状态"]
-                    enabled: false
+                ColumnLayout {
+                    spacing: 4
+                    ComComboBox {
+                        model: ["禁用状态"]
+                        enabled: false
+                    }
+                    ComLabel { text: "禁用状态"; secondary: true; size: "small" }
                 }
             }
 

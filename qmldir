@@ -5,7 +5,7 @@ typeinfo ComItem.qmltypes
 designersupported
 depends QtQuick
 singleton ComTheme 1.0 ComTheme.qml
-BasicButton 1.0 BasicButton.qml
+ComButton 1.0 ComButton.qml
 ComAvatar 1.0 ComAvatar.qml
 ComBadge 1.0 ComBadge.qml
 ComCanvas 1.0 ComCanvas.qml

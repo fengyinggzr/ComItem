@@ -6,6 +6,9 @@ import QtQuick.Controls.Basic
 ComboBox {
     id: root
 
+    // Popup 背景透明度控制，false 为非透明（默认），true 为透明
+    property bool popupTransparent: false
+
     implicitWidth: 200
     implicitHeight: 36
 
@@ -28,7 +31,9 @@ ComboBox {
         }
 
         background: Rectangle {
-            color: highlighted ? ComTheme.primary : (hovered ? ComTheme.backgroundHover : "transparent")
+            color: highlighted ? ComTheme.primary
+                : (hovered ? ComTheme.backgroundHover
+                    : (root.popupTransparent ? "transparent" : ComTheme.background))
             radius: ComTheme.radiusSmall
         }
 
@@ -99,12 +104,12 @@ ComboBox {
 
         background: Rectangle {
             radius: ComTheme.radiusMedium
-            color: ComTheme.background
-            border.color: ComTheme.border
-            border.width: 1
+            color: root.popupTransparent ? "transparent" : ComTheme.background
+            border.color: root.popupTransparent ? "transparent" : ComTheme.border
+            border.width: root.popupTransparent ? 0 : 1
 
-            // 阴影效果
-            layer.enabled: true
+            // 阴影效果（仅在非透明时启用）
+            layer.enabled: !root.popupTransparent
             layer.effect: Item {
                 Rectangle {
                     anchors.fill: parent

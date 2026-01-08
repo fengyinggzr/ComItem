@@ -1,5 +1,5 @@
-#ifndef COMBUTTON_H
-#define COMBUTTON_H
+#ifndef COMBASICBUTTON_H
+#define COMBASICBUTTON_H
 
 #include <QtQuick/QQuickPaintedItem>
 #include <QtQml/qqmlregistration.h>
@@ -12,7 +12,7 @@
 #  define COMITEM_EXPORT Q_DECL_IMPORT
 #endif
 
-class COMITEM_EXPORT ComButton : public QQuickPaintedItem
+class COMITEM_EXPORT ComBasicButton : public QQuickPaintedItem
 {
     Q_OBJECT
     QML_ELEMENT
@@ -24,8 +24,8 @@ class COMITEM_EXPORT ComButton : public QQuickPaintedItem
     Q_PROPERTY(bool hovered READ hovered NOTIFY hoveredChanged)
 
 public:
-    explicit ComButton(QQuickItem *parent = nullptr);
-    ~ComButton() override;
+    explicit ComBasicButton(QQuickItem *parent = nullptr);
+    ~ComBasicButton() override;
 
     void paint(QPainter *painter) override;
 
@@ -68,4 +68,4 @@ private:
     bool m_hovered;
 };
 
-#endif // COMBUTTON_H
+#endif // COMBASICBUTTON_H

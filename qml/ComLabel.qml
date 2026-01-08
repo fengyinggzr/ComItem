@@ -1,7 +1,9 @@
 import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Basic
 
 // ComLabel - 标签组件
-Text {
+Label {
     id: root
 
     property string size: "medium"  // "small", "medium", "large"

@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Basic
 
-// BasicButton - 基础按钮组件
+// ComButton - 基础按钮组件
 Button {
     id: root
 
