@@ -5,9 +5,9 @@ Item {
     id: root
 
     property bool checked: false
-    property color checkedColor: "#2ecc71"
-    property color uncheckedColor: "#cccccc"
-    property color handleColor: "#ffffff"
+    property color checkedColor: ComTheme.primary
+    property color uncheckedColor: ComTheme.border
+    property color handleColor: ComTheme.background
     property bool enabled: true
 
     signal toggled(bool checked)

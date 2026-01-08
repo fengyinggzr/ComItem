@@ -4,9 +4,15 @@ classname ComItemPlugin
 typeinfo ComItem.qmltypes
 designersupported
 depends QtQuick
-ComItemControls 1.0 ComItemControls.qml
-ComCard 1.0 ComCard.qml
-ComSwitch 1.0 ComSwitch.qml
-ComBadge 1.0 ComBadge.qml
-ComAvatar 1.0 ComAvatar.qml
+singleton ComTheme 1.0 ComTheme.qml
 BasicButton 1.0 BasicButton.qml
+ComAvatar 1.0 ComAvatar.qml
+ComBadge 1.0 ComBadge.qml
+ComCanvas 1.0 ComCanvas.qml
+ComCard 1.0 ComCard.qml
+ComCheckBox 1.0 ComCheckBox.qml
+ComComboBox 1.0 ComComboBox.qml
+ComItemControls 1.0 ComItemControls.qml
+ComLabel 1.0 ComLabel.qml
+ComSwitch 1.0 ComSwitch.qml
+ComTextField 1.0 ComTextField.qml

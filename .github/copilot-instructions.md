@@ -2,7 +2,7 @@
 
 ## 项目概述
 
-ComItem 是一个 **Qt6 QML 插件库**，提供可复用的自定义 UI 组件。支持 Qt Creator 设计模式拖拽使用，以动态库形式供其他项目引用。
+ComItem 是一个 **Qt6 QML 插件库**，提供统一蓝紫色主题风格的可复用 UI 组件。支持 Qt Creator 设计模式拖拽使用，以动态库形式供其他项目引用。
 
 ## 架构
 
@@ -12,8 +12,27 @@ ComItem 是一个 **Qt6 QML 插件库**，提供可复用的自定义 UI 组件�
   - 导出宏: `COMITEM_EXPORT` (定义 `COMITEM_LIBRARY` 时导出)
 - **纯 QML 组件** (`qml/`): 直接使用 QtQuick 构建，适合声明式 UI 组件
 
+### 主题系统
+- **ComTheme** (Singleton): 定义统一的蓝紫色主题色，包括主色、文字色、背景色、边框色、圆角、字体大小等
+- 所有组件通过 `ComTheme.xxx` 引用主题属性，确保风格一致
+
+### 组件清单
+| 类型 | 组件 | 说明 |
+|------|------|------|
+| 主题 | `ComTheme` | 单例，统一主题色定义 |
+| 按钮 | `BasicButton` | 蓝紫色主题按钮 |
+| 输入 | `ComTextField` | 输入框 |
+| 输入 | `ComComboBox` | 下拉选择框 |
+| 控件 | `ComCheckBox` | 复选框 |
+| 控件 | `ComSwitch` | 开关 |
+| 显示 | `ComLabel` | 文字标签 |
+| 显示 | `ComCanvas` | 自定义绘图 (rectangle/circle/triangle/star/wave/chart) |
+| 容器 | `ComCard` | 卡片容器 |
+| 显示 | `ComAvatar`, `ComBadge` | 头像、徽章 |
+
 ### 关键文件
 - [qmldir](qmldir): 模块定义，列出所有公开组件及版本
+- [qml/ComTheme.qml](qml/ComTheme.qml): 主题色定义 (Singleton)
 - [designer/comitem.metainfo](designer/comitem.metainfo): Qt Creator 设计器元数据
 - [CMakeLists.txt](CMakeLists.txt): 使用 `qt_add_qml_module` 构建插件
 
@@ -23,8 +42,7 @@ ComItem 是一个 **Qt6 QML 插件库**，提供可复用的自定义 UI 组件�
 1. 在 `cpp/` 创建 `.h/.cpp` 文件（CMake 会自动扫描）
 2. 继承 `QQuickPaintedItem`，添加 `QML_ELEMENT` 宏
 3. 使用 `Q_PROPERTY` 声明属性，实现 getter/setter 和 `*Changed` 信号
-4. 在 `qmldir` 添加组件声明（如已用 `QML_ELEMENT` 则自动注册）
-5. 在 `designer/comitem.metainfo` 添加设计器条目
+4. 在 `designer/comitem.metainfo` 添加设计器条目
 
 ```cpp
 // 标准 C++ 组件模板
@@ -34,7 +52,6 @@ class COMITEM_EXPORT ComXxx : public QQuickPaintedItem {
     Q_PROPERTY(QString text READ text WRITE setText NOTIFY textChanged)
 public:
     void paint(QPainter *painter) override;
-    // getter/setter...
 signals:
     void textChanged();
 };
@@ -44,17 +61,33 @@ signals:
 1. 在 `qml/` 创建 `.qml` 文件
 2. 在 `qmldir` 添加: `ComponentName 1.0 ComponentName.qml`
 3. 在 `designer/comitem.metainfo` 添加设计器条目
+4. **必须使用 ComTheme 引用颜色**，保持风格一致
+
+```qml
+// 标准 QML 组件模板
+import QtQuick
+
+Item {
+    id: root
+    // 使用主题色
+    property color primaryColor: ComTheme.primary
+    // ...
+}
+```
 
 ### 命名约定
 - C++ 类名: `Com` 前缀 (如 `ComButton`, `ComProgressBar`)
 - QML 文件: 与组件名相同 (如 `ComCard.qml`, `ComSwitch.qml`)
-- 设计器分类: `ComItem - Basic` 或 `ComItem - Controls`
+- 设计器分类: `ComItem - Basic`, `ComItem - Controls`, `ComItem - Input`, `ComItem - Display`
 
 ## 构建命令
 
 ```powershell
-# 配置（使用 VS 2022）
-cmake -B build -G "Visual Studio 17 2022" -A x64 -DCMAKE_PREFIX_PATH="D:/Qt/Qt6.8/6.8.2/msvc2022_64"
+# 使用 VS 开发人员环境
+& "C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\Tools\Launch-VsDevShell.ps1" -Arch amd64
+
+# 配置
+cmake -B build -G Ninja -DCMAKE_PREFIX_PATH="D:/Qt/Qt6.8/6.8.1/msvc2022_64"
 
 # 构建（自动复制到 Qt SDK 目录）
 cmake --build build --config Debug    # 生成带 d 后缀的库
@@ -82,3 +115,4 @@ cmake --build build --target ComItemExample
 - **Debug/Release 后缀**: Debug 版本库名带 `d` 后缀 (如 `ComItemd.dll`)
 - **头文件复制**: 仅 `.h` 文件会被复制到安装目录
 - 修改组件后需重新构建才能在 Qt Creator 设计器中生效
+- **VS 环境**: 必须使用 Developer PowerShell 构建，否则会报 `type_traits` 找不到

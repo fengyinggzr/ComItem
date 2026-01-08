@@ -140,6 +140,90 @@ MetaInfo {
             libraryIcon: "images/item-icon.svg"
             version: "1.0"
             requiredImport: "ComItem"
+
+            Property { name: "width"; type: "int"; value: 120 }
+            Property { name: "height"; type: "int"; value: 36 }
+            Property { name: "text"; type: "string"; value: "Button" }
+        }
+    }
+
+    Type {
+        name: "ComItem.ComLabel"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComLabel"
+            category: "ComItem - Display"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "text"; type: "string"; value: "Label" }
+        }
+    }
+
+    Type {
+        name: "ComItem.ComTextField"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComTextField"
+            category: "ComItem - Input"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "width"; type: "int"; value: 200 }
+            Property { name: "height"; type: "int"; value: 36 }
+            Property { name: "placeholderText"; type: "string"; value: "Enter text..." }
+        }
+    }
+
+    Type {
+        name: "ComItem.ComCheckBox"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComCheckBox"
+            category: "ComItem - Controls"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "text"; type: "string"; value: "CheckBox" }
+        }
+    }
+
+    Type {
+        name: "ComItem.ComComboBox"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComComboBox"
+            category: "ComItem - Input"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "width"; type: "int"; value: 200 }
+            Property { name: "height"; type: "int"; value: 36 }
+        }
+    }
+
+    Type {
+        name: "ComItem.ComCanvas"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComCanvas"
+            category: "ComItem - Display"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "width"; type: "int"; value: 100 }
+            Property { name: "height"; type: "int"; value: 100 }
+            Property { name: "shape"; type: "string"; value: "rectangle" }
         }
     }
 }

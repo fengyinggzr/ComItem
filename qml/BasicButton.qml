@@ -2,32 +2,41 @@ import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Basic
 
+// BasicButton - 基础按钮组件
 Button {
     id: root
-    width: 150
-    height: 40
 
-    text: qsTr("text")
-    font.pixelSize: 16
+    implicitWidth: 120
+    implicitHeight: 36
 
-    property alias color: contentText.color
+    text: qsTr("Button")
+    font.pixelSize: ComTheme.fontSizeMedium
+
     property alias radius: backRect.radius
 
     contentItem: Text {
         id: contentText
         text: root.text
         font: root.font
-        // color: root.pressed ? "#FFFFFF" : "black"
-        color: "white"
+        color: ComTheme.textOnPrimary
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
     }
 
     background: Rectangle {
         id: backRect
-        implicitWidth: root.width
-        implicitHeight: root.height
-        radius: 4
-        color: enabled ? ((root.checked | root.pressed) ? "#6FC2F0" : "#0A9CEE") : "#D0D4DB"
+        implicitWidth: root.implicitWidth
+        implicitHeight: root.implicitHeight
+        radius: ComTheme.radiusMedium
+        color: {
+            if (!root.enabled) return ComTheme.backgroundDisabled
+            if (root.pressed) return ComTheme.primaryPressed
+            if (root.hovered) return ComTheme.primaryHover
+            return ComTheme.primary
+        }
+
+        Behavior on color {
+            ColorAnimation { duration: ComTheme.animationDuration }
+        }
     }
 }
