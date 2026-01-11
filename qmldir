@@ -4,12 +4,7 @@ classname ComItemPlugin
 typeinfo ComItem.qmltypes
 designersupported
 depends QtQuick
-singleton ComTheme 1.0 ComTheme.qml
 ComButton 1.0 ComButton.qml
-ComButton2_AttachedStyle 1.0 ComButton2_AttachedStyle.qml
-ComButton3_InlineStyle 1.0 ComButton3_InlineStyle.qml
-ComButton4_InstanceStyle 1.0 ComButton4_InstanceStyle.qml
-ComThemeInstance 1.0 ComThemeInstance.qml
 ComCanvas 1.0 ComCanvas.qml
 ComCheckBox 1.0 ComCheckBox.qml
 ComComboBox 1.0 ComComboBox.qml
