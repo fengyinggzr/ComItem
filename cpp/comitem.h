@@ -1,15 +1,9 @@
 #ifndef COMITEM_H
 #define COMITEM_H
 
+#include "comitem_global.h"
 #include <QtQuick/QQuickPaintedItem>
 #include <QtQml/qqmlregistration.h>
-
-// 导出宏定义
-#if defined(COMITEM_LIBRARY)
-#  define COMITEM_EXPORT Q_DECL_EXPORT
-#else
-#  define COMITEM_EXPORT Q_DECL_IMPORT
-#endif
 
 class COMITEM_EXPORT ComItem : public QQuickPaintedItem
 {

@@ -1,10 +1,10 @@
 #ifndef COMTHEMEATTACHED_H
 #define COMTHEMEATTACHED_H
 
+#include "comitem_global.h"
 #include <QObject>
 #include <QColor>
 #include <QQmlEngine>
-#include "comitem.h"
 
 // ComThemeAttached - 附加属性类
 class COMITEM_EXPORT ComThemeAttached : public QObject

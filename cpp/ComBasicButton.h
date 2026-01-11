@@ -1,16 +1,10 @@
 #ifndef COMBASICBUTTON_H
 #define COMBASICBUTTON_H
 
+#include "comitem_global.h"
 #include <QtQuick/QQuickPaintedItem>
 #include <QtQml/qqmlregistration.h>
 #include <QColor>
-
-// 导出宏定义
-#if defined(COMITEM_LIBRARY)
-#  define COMITEM_EXPORT Q_DECL_EXPORT
-#else
-#  define COMITEM_EXPORT Q_DECL_IMPORT
-#endif
 
 class COMITEM_EXPORT ComBasicButton : public QQuickPaintedItem
 {
