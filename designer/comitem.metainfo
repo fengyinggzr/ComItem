@@ -180,6 +180,23 @@ MetaInfo {
     }
 
     Type {
+        name: "ComItem.ComLineTextField"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComLineTextField"
+            category: "ComItem - Input"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "width"; type: "int"; value: 200 }
+            Property { name: "height"; type: "int"; value: 36 }
+            Property { name: "placeholderText"; type: "string"; value: "Enter text..." }
+        }
+    }
+
+    Type {
         name: "ComItem.ComCheckBox"
         icon: "images/item-icon16.svg"
 

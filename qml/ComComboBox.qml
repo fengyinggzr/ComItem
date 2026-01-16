@@ -93,7 +93,7 @@ ComboBox {
     }
 
     popup: Popup {
-        y: root.height + 4
+        y: root.height
         width: root.width
         // 根据 model 数量和 visibleItemCount 计算高度
         implicitHeight: Math.min(root.count, root.visibleItemCount) * root.itemHeight + 8

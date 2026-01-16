@@ -79,6 +79,27 @@ Window {
                 }
             }
 
+            // ===== 下划线输入框组 =====
+            ComLabel { text: "ComLineTextField 下划线输入框"; bold: true }
+
+            RowLayout {
+                spacing: 12
+
+                ComLineTextField {
+                    placeholderText: "请输入内容..."
+                }
+
+                ComLineTextField {
+                    placeholderText: "错误状态"
+                    error: true
+                }
+
+                ComLineTextField {
+                    placeholderText: "禁用状态"
+                    enabled: false
+                }
+            }
+
             // ===== 复选框组 =====
             ComLabel { text: "ComCheckBox 复选框"; bold: true }
 
