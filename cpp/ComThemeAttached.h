@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QColor>
 #include <QQmlEngine>
+#include <qtmetamacros.h>
 
 // ComThemeAttached - 附加属性类
 class COMITEM_EXPORT ComThemeAttached : public QObject
@@ -46,6 +47,7 @@ class COMITEM_EXPORT ComThemeAttached : public QObject
     Q_PROPERTY(int radiusSmall READ radiusSmall CONSTANT)
     Q_PROPERTY(int radiusMedium READ radiusMedium CONSTANT)
     Q_PROPERTY(int radiusLarge READ radiusLarge CONSTANT)
+    Q_PROPERTY(int radiusCombo READ radiusCombo CONSTANT)
 
     Q_PROPERTY(int fontSizeSmall READ fontSizeSmall CONSTANT)
     Q_PROPERTY(int fontSizeMedium READ fontSizeMedium CONSTANT)
@@ -88,6 +90,7 @@ public:
     int radiusSmall() const { return 4; }
     int radiusMedium() const { return 6; }
     int radiusLarge() const { return 8; }
+    int radiusCombo() const { return 1; }
 
     int fontSizeSmall() const { return 12; }
     int fontSizeMedium() const { return 14; }

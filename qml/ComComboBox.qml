@@ -38,7 +38,7 @@ ComboBox {
             color: highlighted ? ComTheme.primary
                 : (hovered ? ComTheme.backgroundHover
                     : (root.popupTransparent ? "transparent" : ComTheme.background))
-            radius: ComTheme.radiusSmall
+            radius: ComTheme.radiusCombo
         }
 
         highlighted: root.highlightedIndex === index
@@ -123,8 +123,8 @@ ComboBox {
             layer.effect: Item {
                 Rectangle {
                     anchors.fill: parent
-                    anchors.margins: -4
-                    radius: ComTheme.radiusMedium + 4
+                    // anchors.margins: -1
+                    radius: ComTheme.radiusMedium /*+ 1*/
                     color: ComTheme.shadow
                     z: -1
                 }
