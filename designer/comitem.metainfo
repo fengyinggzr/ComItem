@@ -66,6 +66,23 @@ MetaInfo {
     }
 
     Type {
+        name: "ComItem.ComQmlProgressBar"
+        icon: "images/item-icon16.svg"
+
+        ItemLibraryEntry {
+            name: "ComQmlProgressBar"
+            category: "ComItem - Controls"
+            libraryIcon: "images/item-icon.svg"
+            version: "1.0"
+            requiredImport: "ComItem"
+
+            Property { name: "width"; type: "int"; value: 200 }
+            Property { name: "height"; type: "int"; value: 24 }
+            Property { name: "value"; type: "real"; value: 50 }
+        }
+    }
+
+    Type {
         name: "ComItem.ComCard"
         icon: "images/item-icon16.svg"
 

@@ -12,3 +12,4 @@ ComLabel 1.0 ComLabel.qml
 ComSwitch 1.0 ComSwitch.qml
 ComTextField 1.0 ComTextField.qml
 ComLineTextField 1.0 ComLineTextField.qml
+ComQmlProgressBar 1.0 ComQmlProgressBar.qml

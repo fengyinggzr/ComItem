@@ -227,6 +227,123 @@ Window {
                 }
             }
 
+            // ===== 进度条组 =====
+            ComLabel { text: "ComQmlProgressBar 进度条"; bold: true }
+
+            ColumnLayout {
+                spacing: 16
+
+                // 基础进度条
+                RowLayout {
+                    spacing: 16
+
+                    ColumnLayout {
+                        spacing: 4
+                        ComQmlProgressBar {
+                            value: 0.3
+                        }
+                        ComLabel { text: "30%"; secondary: true; size: "small" }
+                    }
+
+                    ColumnLayout {
+                        spacing: 4
+                        ComQmlProgressBar {
+                            value: 0.6
+                        }
+                        ComLabel { text: "60%"; secondary: true; size: "small" }
+                    }
+
+                    ColumnLayout {
+                        spacing: 4
+                        ComQmlProgressBar {
+                            value: 1.0
+                        }
+                        ComLabel { text: "100%"; secondary: true; size: "small" }
+                    }
+                }
+
+                // 带文字的进度条
+                RowLayout {
+                    spacing: 16
+
+                    ColumnLayout {
+                        spacing: 4
+                        ComQmlProgressBar {
+                            implicitHeight: 20
+                            value: 0.75
+                            showText: true
+                        }
+                        ComLabel { text: "显示百分比"; secondary: true; size: "small" }
+                    }
+
+                    ColumnLayout {
+                        spacing: 4
+                        ComQmlProgressBar {
+                            implicitHeight: 20
+                            value: 0.45
+                            showText: true
+                            radius: 10
+                        }
+                        ComLabel { text: "大圆角"; secondary: true; size: "small" }
+                    }
+                }
+
+                // 不确定进度条
+                RowLayout {
+                    spacing: 16
+
+                    ColumnLayout {
+                        spacing: 4
+                        ComQmlProgressBar {
+                            indeterminate: true
+                        }
+                        ComLabel { text: "不确定进度"; secondary: true; size: "small" }
+                    }
+
+                    ColumnLayout {
+                        spacing: 4
+                        ComQmlProgressBar {
+                            enabled: false
+                            value: 0.5
+                        }
+                        ComLabel { text: "禁用状态"; secondary: true; size: "small" }
+                    }
+                }
+
+                // 动态进度条
+                RowLayout {
+                    spacing: 16
+
+                    ComQmlProgressBar {
+                        id: animatedProgress
+                        implicitWidth: 300
+                        implicitHeight: 12
+                        showText: true
+
+                        NumberAnimation on value {
+                            from: 0
+                            to: 1
+                            duration: 3000
+                            loops: Animation.Infinite
+                        }
+
+                        // Timer {
+                        //     interval: 10
+                        //     running: true
+                        //     repeat: true
+                        //     onTriggered: {
+                        //         animatedProgress.value = animatedProgress.value + 0.001
+                        //         if (animatedProgress.value >= 1) {
+                        //             animatedProgress.value = 0
+                        //         }
+                        //     }
+                        // }
+                    }
+
+                    ComLabel { text: "动画演示"; secondary: true }
+                }
+            }
+
             // ===== 自定义绘图组 =====
             ComLabel { text: "ComCanvas 自定义绘图"; bold: true }
 
