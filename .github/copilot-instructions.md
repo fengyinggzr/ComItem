@@ -1,92 +1,121 @@
 # ComItem AI Coding Instructions
 
-This repository contains **ComItem**, a Qt6 QML Plugin library delivering a unified blue-purple themed UI component set. It uses a dual-layer architecture (C++ & QML) and is designed for seamless integration with Qt Creator and Qt Design Studio.
+**ComItem** 是一个 Qt6 QML 插件库，提供统一蓝紫色主题的 UI 组件。采用 C++/QML 双层架构，支持 Qt Creator 和 Qt Design Studio。
 
-## Project Architecture
+## 架构概览
 
-### 1. Dual-Layer Component System
-- **C++ Components** (`cpp/`):
-  - Handle complex logic, custom painting (`QQuickPaintedItem`), or system integration.
-  - Exposed to QML via `QML_ELEMENT` macro.
-  - Example: `ComProgressBar`, `ComThemeAttached`.
-- **QML Components** (`qml/`):
-  - Purely declarative UI components.
-  - Inherit from standard Qt Quick Controls (e.g., `Button`, `TextField`).
-  - Style strictly using the `ComTheme` system.
-  - Example: `ComButton.qml`, `ComSwitch.qml`.
+### 双层组件系统
+| 层级 | 目录 | 用途 | 示例 |
+|------|------|------|------|
+| C++ | `cpp/` | 自定义绘制 (`QQuickPaintedItem`)、复杂逻辑 | `ComProgressBar`, `ComThemeAttached` |
+| QML | `qml/` | 声明式 UI，继承 Qt Quick Controls | `ComButton.qml`, `ComSwitch.qml` |
 
-### 2. Theming System (`ComTheme`)
-- **Compulsory Usage**: All visual components **must** derive colors, fonts, and metrics from `ComTheme` attached properties.
-- **Implementation**: Defined in `cpp/ComThemeAttached.h`.
-  - `ComThemeAttached`: The data class holding values (e.g., `primary`, `radiusMedium`).
-  - `ComTheme`: The anchor class using `QML_ATTACHED(ComThemeAttached)`.
-- **Usage**: `ComTheme.primary`, `ComTheme.textOnPrimary`, `ComTheme.spacingSmall`.
+### ComTheme 主题系统（核心）
+**所有视觉组件必须使用 ComTheme 附加属性**，定义于 `cpp/ComThemeAttached.h`：
+```qml
+// 颜色
+ComTheme.primary / .primaryHover / .primaryPressed / .primaryLight
+ComTheme.textPrimary / .textSecondary / .textDisabled / .textOnPrimary
+ComTheme.background / .backgroundHover / .backgroundDisabled
+ComTheme.border / .borderFocus / .borderError
+ComTheme.success / .warning / .error
 
-### 3. Module Definition
-- Defined in `CMakeLists.txt` using `qt_add_qml_module`.
-- URI: `ComItem`
-- Plugin Target: `ComItemplugin`
+// 尺寸
+ComTheme.radiusSmall(4) / .radiusMedium(6) / .radiusLarge(8)
+ComTheme.spacingSmall(4) / .spacingMedium(8) / .spacingLarge(12)
+ComTheme.fontSizeSmall(12) / .fontSizeMedium(14) / .fontSizeLarge(16)
+ComTheme.animationDuration(150)
+```
 
-## Development Workflows
+## 开发工作流
 
-### Build System
-- **Generator**: Ninja (preferred).
-- **Process**:
-  1. Configure: `cmake -B build -G Ninja -DCMAKE_PREFIX_PATH="<PATH_TO_QT>"`
-  2. Build: `cmake --build build --config Debug`
-  3. **Auto-Install**: The build scripts are configured to automatically install artifacts into the Qt SDK QML directories and Qt Design Studio directories. **Be aware that builds modify the local Qt SDK.**
+### 构建命令（Windows + Ninja）
+```powershell
+# 配置
+cmake -B build -G Ninja -DCMAKE_PREFIX_PATH="D:/Qt/Qt6.8/6.8.1/msvc2022_64"
+# 构建
+cmake --build build --config Debug
+```
+⚠️ **构建会自动安装到 Qt SDK 和 Qt Design Studio 目录**
 
-### Running Examples
-The `example/` directory is a **standalone** CMake project that depends on the installed/built `ComItem` library.
-1. Build root `ComItem` project first.
-2. Build `example` project:
-   ```powershell
-   cd example
-   cmake -B build -G Ninja -DCMAKE_PREFIX_PATH="<PATH_TO_QT>"
-   cmake --build build
-   ```
-3. Run: `.\build\Debug\ComItemExample.exe`
+### 运行示例
+`example/` 是独立 CMake 项目，需先构建主项目：
+```powershell
+cd example && cmake -B build -G Ninja -DCMAKE_PREFIX_PATH="<QT_PATH>" && cmake --build build
+.\build\Debug\ComItemExample.exe
+```
 
-## Coding Conventions
+## 编码规范
 
-### QML (`.qml`)
-- **Root ID**: Always name the root element `id: root`.
-- **Imports**:
-  ```qml
-  import QtQuick
-  import QtQuick.Controls
-  import QtQuick.Controls.Basic
-  // ComItem is implicit if inside the module, otherwise import ComItem
-  ```
-- **Sizing**: Use `implicitWidth` and `implicitHeight`.
-- **Theming Example**:
-  ```qml
-  Rectangle {
-      color: root.enabled ? ComTheme.primary : ComTheme.backgroundDisabled
-      radius: ComTheme.radiusMedium
-      border.color: ComTheme.border
-  }
-  ```
+### QML 组件模板
+```qml
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Basic
 
-### C++ (`.cpp`/`.h`)
-- **Standard**: C++20.
-- **Macros**:
-  - `COMITEM_EXPORT` for all public classes.
-  - `Q_OBJECT`, `QML_ELEMENT` / `QML_NAMED_ELEMENT` for QML exposure.
-- **Properties**: Prefer `CONSTANT` properties for theme values that don't change at runtime.
+// ComXxx - 组件描述
+ControlBase {  // 如 Button, TextField, Switch
+    id: root
 
-## Common Tasks
+    implicitWidth: 120
+    implicitHeight: 36
 
-- **Adding a new QML Component**:
-  1. Create `qml/ComNewItem.qml`.
-  2. It is automatically picked up by `file(GLOB QML_FILES ...)` in `CMakeLists.txt`, but purely relying on GLOB can be flaky; re-configure CMake if needed.
-  3. Use `ComTheme` for all styling.
+    // 使用 ComTheme 进行所有样式设置
+    background: Rectangle {
+        color: root.enabled ? ComTheme.primary : ComTheme.backgroundDisabled
+        radius: ComTheme.radiusMedium
+        border.color: ComTheme.border
+        
+        Behavior on color {
+            ColorAnimation { duration: ComTheme.animationDuration }
+        }
+    }
+}
+```
 
-- **Adding a new C++ Component**:
-  1. Create `.h` and `.cpp` in `cpp/`.
-  2. Add `QML_ELEMENT` to header.
-  3. Re-configure CMake (GLOB will pick it up).
+### C++ 组件模板
+```cpp
+#include "comitem_global.h"
+#include <QtQuick/QQuickPaintedItem>
+#include <QtQml/qqmlregistration.h>
 
-## Debugging
-- If QML components are not found, check if `qt_add_qml_module` in `CMakeLists.txt` includes the file.
-- `ComItemExample` prints import paths on startup; check console output to verify module resolution (especially `QT_PLUGIN_PATH` or `QML_IMPORT_PATH`).
+class COMITEM_EXPORT ComXxx : public QQuickPaintedItem {
+    Q_OBJECT
+    QML_ELEMENT
+    Q_PROPERTY(type name READ name WRITE setName NOTIFY nameChanged)
+    // ...
+};
+```
+
+## 添加新组件
+
+### QML 组件
+1. 创建 `qml/ComNewItem.qml`（文件名必须 `Com` 前缀）
+2. 使用 `ComTheme` 进行所有样式
+3. CMake GLOB 自动扫描，必要时重新配置
+
+### C++ 组件
+1. 在 `cpp/` 创建 `.h/.cpp`
+2. 使用 `COMITEM_EXPORT` + `QML_ELEMENT` 宏
+3. 重新配置 CMake
+
+### 设计器支持
+新组件需在 `designer/comitem.metainfo` 添加条目：
+```
+Type {
+    name: "ComItem.ComNewItem"
+    icon: "images/item-icon16.svg"
+    ItemLibraryEntry {
+        name: "ComNewItem"
+        category: "ComItem - Controls"
+        requiredImport: "ComItem"
+        Property { name: "width"; type: "int"; value: 100 }
+    }
+}
+```
+
+## 调试
+
+- **组件未找到**: 检查 CMake 是否扫描到文件，运行 `cmake -B build` 重新配置
+- **主题不生效**: 确认使用 `ComTheme.xxx` 而非硬编码颜色
+- **设计器预览失败**: 查看 `docs/快速解决预览问题.md`
